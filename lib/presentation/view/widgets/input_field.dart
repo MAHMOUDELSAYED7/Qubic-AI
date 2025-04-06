@@ -12,7 +12,7 @@ import 'package:qubic_ai/core/service/text_recognition.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 
 import '../../../core/service/image_packer.dart';
-import '../../../core/utils/constants/colors.dart';
+import '../../../core/themes/colors.dart';
 import '../../../core/utils/helper/custom_toast.dart';
 import '../../../core/utils/helper/regexp_methods.dart';
 import '../../bloc/chat/chat_bloc.dart';
@@ -47,13 +47,13 @@ class _BuildInputFieldState extends State<BuildInputField> {
   @override
   void initState() {
     super.initState();
-    _searchBloc = getIt<SearchBloc>();
-    _inputFieldBloc = InputFieldBloc();
+    _searchBloc = sl<SearchBloc>();
+    _inputFieldBloc = sl<InputFieldBloc>();
     _viewModel = InputFieldViewModel(
       inputFieldBloc: _inputFieldBloc,
       chatBloc: widget.chatBloc,
-      imagePickerService: getIt<ImagePickerService>(),
-      textRecognitionService: getIt<TextRecognitionService>(),
+      imagePickerService: sl<ImagePickerService>(),
+      textRecognitionService: sl<TextRecognitionService>(),
     );
     _popupMenuKey = GlobalKey();
   }
@@ -61,7 +61,6 @@ class _BuildInputFieldState extends State<BuildInputField> {
   @override
   void dispose() {
     _viewModel.dispose();
-    _inputFieldBloc.close();
     super.dispose();
   }
 

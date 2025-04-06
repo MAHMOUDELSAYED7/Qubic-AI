@@ -7,7 +7,7 @@ import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 import 'package:qubic_ai/core/utils/helper/network_status.dart';
 import 'package:qubic_ai/presentation/bloc/chat/chat_bloc.dart';
 
-import '../../core/utils/constants/colors.dart';
+import '../../core/themes/colors.dart';
 import '../../core/utils/constants/images.dart';
 import '../../core/utils/helper/custom_toast.dart';
 import '../bloc/search/search_bloc.dart';
@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
-  final _chatBloc = getIt<ChatBloc>();
+  final _chatBloc = sl<ChatBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen>
                   chatBloc: _chatBloc,
                 ),
                 BlocProvider(
-                  create: (_) => getIt<SearchBloc>(),
+                  create: (_) => sl<SearchBloc>(),
                   child: const HistoryScreen(),
                 ),
               ],

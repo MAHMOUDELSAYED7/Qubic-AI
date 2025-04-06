@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 
-import '../../../core/utils/constants/colors.dart';
+import '../../themes/colors.dart';
 
 DateTime? _lastSnackBarTime;
 

@@ -9,27 +9,24 @@ import '../../presentation/bloc/search/search_bloc.dart';
 import '../service/image_packer.dart';
 import '../service/text_recognition.dart';
 
-final getIt = GetIt.instance;
+final sl = GetIt.instance;
 
-void getItSetup() {
-  getIt.registerLazySingleton<GenerativeAIWebService>(
+void setupServiceLocator() {
+  sl.registerLazySingleton<GenerativeAIWebService>(
       () => GenerativeAIWebService());
-  getIt.registerLazySingleton<HiveService>(() => HiveService());
+  sl.registerLazySingleton<HiveService>(() => HiveService());
 
-  getIt.registerLazySingleton<MessageRepository>(() => MessageRepository());
+  sl.registerLazySingleton<MessageRepository>(() => MessageRepository());
 
-  getIt.registerFactory<ChatBloc>(() => ChatBloc(
-        getIt<GenerativeAIWebService>(),
-        getIt<MessageRepository>(),
+  sl.registerFactory<ChatBloc>(() => ChatBloc(
+        sl<GenerativeAIWebService>(),
+        sl<MessageRepository>(),
       ));
-  getIt
-      .registerLazySingleton<SearchBloc>(() => SearchBloc(getIt<ChatBloc>()));
+  sl.registerLazySingleton<SearchBloc>(() => SearchBloc(sl<ChatBloc>()));
+  sl.registerLazySingleton<InputFieldBloc>(() => InputFieldBloc());
 
-  getIt.registerLazySingleton<ImagePickerService>(() => ImagePickerService());
-  getIt.registerLazySingleton<TextRecognitionService>(
+  sl.registerLazySingleton<ImagePickerService>(() => ImagePickerService());
+  sl.registerLazySingleton<TextRecognitionService>(
       () => TextRecognitionService());
 
-  getIt.registerLazySingleton<InputFieldBloc>(
-    () => InputFieldBloc(),
-  );
 }

@@ -5,7 +5,7 @@ import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 import 'package:qubic_ai/core/utils/helper/custom_toast.dart';
 import 'package:qubic_ai/core/utils/helper/regexp_methods.dart';
 
-import '../../../core/utils/constants/colors.dart';
+import '../../../core/themes/colors.dart';
 import '../../../core/utils/helper/clipboard.dart';
 import '../../../core/utils/helper/url_launcher.dart';
 import '../../../core/widgets/code_block_builder.dart';

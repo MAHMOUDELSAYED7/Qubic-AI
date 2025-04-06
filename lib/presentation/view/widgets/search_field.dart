@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:qubic_ai/core/utils/constants/colors.dart';
+import 'package:qubic_ai/core/themes/colors.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 
 import '../../../core/utils/helper/regexp_methods.dart';

@@ -7,7 +7,7 @@ import 'core/di/locator.dart';
 import 'core/service/local_notifications.dart';
 import 'core/service/permission.dart';
 import 'core/service/workmanger.dart';
-import 'core/utils/constants/colors.dart';
+import 'core/themes/colors.dart';
 import 'data/source/database/hive_service.dart';
 
 Future<void> main() async {
@@ -18,7 +18,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HiveService().initializeDatabase();
   await dotenv.load(fileName: '.env');
-  getItSetup();
+  setupServiceLocator();
   await PermissionService().requestNotificationPermission();
   await NotificationService().init();
   WorkManagerService.initialize();

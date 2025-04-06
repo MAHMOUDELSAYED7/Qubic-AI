@@ -3,8 +3,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 import 'package:qubic_ai/core/utils/helper/custom_toast.dart';
 
-import '../../../core/utils/constants/colors.dart';
-import '../../../core/utils/constants/routes.dart';
+import '../../../core/themes/colors.dart';
+import '../../../core/router/routes.dart';
 import '../../../core/utils/helper/regexp_methods.dart';
 import '../../../data/models/hive.dart';
 import '../../bloc/chat/chat_bloc.dart';

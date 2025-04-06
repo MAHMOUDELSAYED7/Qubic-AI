@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qubic_ai/presentation/view/home.dart';
-import '../utils/constants/routes.dart';
+import 'routes.dart';
 import '../../presentation/view/chat.dart';
 import '../../presentation/view/splash.dart';
 import 'page_transition.dart';

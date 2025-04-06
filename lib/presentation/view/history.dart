@@ -31,8 +31,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    _chatBloc = getIt<ChatBloc>();
-    _searchBloc = getIt<SearchBloc>();
+    _chatBloc = sl<ChatBloc>();
+    _searchBloc = sl<SearchBloc>();
     _viewModel = SearchViewModel(
       searchController: TextEditingController(),
       searchBloc: _searchBloc,

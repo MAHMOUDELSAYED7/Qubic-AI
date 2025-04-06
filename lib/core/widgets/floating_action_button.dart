@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 
-import '../utils/constants/colors.dart';
+import '../themes/colors.dart';
 
 class BuildFloatingActionButton extends StatelessWidget {
   const BuildFloatingActionButton({super.key, this.onPressed, this.iconData});
