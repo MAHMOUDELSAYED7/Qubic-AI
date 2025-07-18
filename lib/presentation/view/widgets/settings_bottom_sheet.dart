@@ -1,10 +1,13 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
-import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/di/locator.dart';
 import '../../../core/themes/colors.dart';
+import '../../../core/utils/helper/custom_toast.dart';
+import '../../bloc/launch_uri/launch_uri_cubit.dart';
 
 class SettingsBottomSheet extends StatefulWidget {
   const SettingsBottomSheet({super.key});
@@ -35,13 +38,6 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
     _controller.removeListener(_onSizeChanged);
     _controller.dispose();
     super.dispose();
-  }
-
-  void _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
   }
 
   void _showTermsOfService() {
@@ -197,62 +193,125 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
   void _showSupport() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: ColorManager.dark,
-        title: Text(
-          'Support',
-          style: context.textTheme.headlineSmall?.copyWith(
-            color: ColorManager.white,
-          ),
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Need help? We\'re here to support you!',
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: ColorManager.grey,
-                ),
+      builder: (context) => BlocProvider(
+        create: (_) => sl<LaunchUriCubit>(),
+        child: Builder(
+          builder: (context) => AlertDialog(
+            backgroundColor: ColorManager.dark,
+            title: Text(
+              'Support',
+              style: context.textTheme.headlineSmall?.copyWith(
+                color: ColorManager.white,
               ),
-              SizedBox(height: 16.h),
-              _buildSupportOption(
-                'Email Support',
-                'support@qubicai.com',
-                Icons.email,
-                () => _launchURL('mailto:support@qubicai.com'),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Need help? We\'re here to support you!',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: ColorManager.grey,
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  _buildEmailLink(context, 'mahmoudelsayed.dev@gmail.com'),
+                  SizedBox(height: 12.h),
+                  _buildSupportOption(
+                    'FAQ',
+                    'Check our frequently asked questions',
+                    Icons.help_outline,
+                    () => context.read<LaunchUriCubit>().openEmailApp(
+                          email: 'mahmoudelsayed.dev@gmail.com',
+                          subject: 'FAQ - Qubic AI',
+                          body: 'Please enter your question for the FAQ:\n\n',
+                        ),
+                  ),
+                  SizedBox(height: 12.h),
+                  _buildSupportOption(
+                    'Report Bug',
+                    'Help us improve by reporting issues',
+                    Icons.bug_report,
+                    () => context.read<LaunchUriCubit>().openEmailApp(
+                          email: 'mahmoudelsayed.dev@gmail.com',
+                          subject: 'Bug Report - Qubic AI',
+                          body: 'Please describe the bug you encountered:\n\n',
+                        ),
+                  ),
+                  SizedBox(height: 12.h),
+                  _buildSupportOption(
+                    'Feature Request',
+                    'Suggest new features',
+                    Icons.lightbulb_outline,
+                    () => context.read<LaunchUriCubit>().openEmailApp(
+                          email: 'mahmoudelsayed.dev@gmail.com',
+                          subject: 'Feature Request - Qubic AI',
+                          body:
+                              'I would like to suggest the following feature:\n\n',
+                        ),
+                  ),
+                  SizedBox(height: 12.h),
+                  _buildSupportOption(
+                    'General Support',
+                    'Get help with any questions',
+                    Icons.support_agent,
+                    () => context.read<LaunchUriCubit>().openEmailApp(
+                          email: 'mahmoudelsayed.dev@gmail.com',
+                          subject: 'Support Request - Qubic AI',
+                          body: 'Hello, I need help with:\n\n',
+                        ),
+                  ),
+                ],
               ),
-              SizedBox(height: 12.h),
-              _buildSupportOption(
-                'FAQ',
-                'Check our frequently asked questions',
-                Icons.help_outline,
-                () => _launchURL('https://qubicai.com/faq'),
-              ),
-              SizedBox(height: 12.h),
-              _buildSupportOption(
-                'Report Bug',
-                'Help us improve by reporting issues',
-                Icons.bug_report,
-                () => _launchURL('mailto:bugs@qubicai.com'),
-              ),
-              SizedBox(height: 12.h),
-              _buildSupportOption(
-                'Feature Request',
-                'Suggest new features',
-                Icons.lightbulb_outline,
-                () => _launchURL('mailto:features@qubicai.com'),
+            ),
+            actions: [
+              OutlinedButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
               ),
             ],
           ),
         ),
-        actions: [
-          OutlinedButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-        ],
+      ),
+    );
+  }
+
+  Widget _buildEmailLink(BuildContext context, String email) {
+    return BlocListener<LaunchUriCubit, LaunchUriState>(
+      listener: (context, state) {
+        if (state == LaunchUriState.launchFailure) {
+          showCustomToast(context,
+              color: ColorManager.error, message: 'Failed to open email app');
+        }
+      },
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 12.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.email, color: ColorManager.purple, size: 20.w),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: InkWell(
+                onTap: () => context.read<LaunchUriCubit>().openEmailApp(
+                      email: email,
+                      subject: 'Qubic AI Support',
+                      body: 'Hello, I need assistance with:\n\n',
+                    ),
+                child: Text(
+                  email,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: ColorManager.purple,
+                    decoration: TextDecoration.underline,
+                    decorationColor: ColorManager.purple,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

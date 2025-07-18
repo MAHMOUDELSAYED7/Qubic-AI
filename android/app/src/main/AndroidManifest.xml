@@ -10,10 +10,10 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
-
         android:label="Qubic AI"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name=".MainActivity"
@@ -49,27 +49,29 @@
             android:name="com.flutterworkmanager.WorkManagerService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <!-- BackgroundFetch Service -->
-        <service android:name="com.transistorsoft.flutter.backgroundfetch.BackgroundFetchService" />
     </application>
 
-    <!-- Required to query activities that can process text, see:
-         https://developer.android.com/training/package-visibility and
-         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
-
-         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <!-- Required visibility configuration for API level 30 and above -->
     <queries>
-        <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT" />
-            <data android:mimeType="text/plain" />
-        </intent>
+        <!-- SMS support check -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="http" />
+            <data android:scheme="sms" />
         </intent>
+        <!-- Call support check -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="https" />
+            <data android:scheme="tel" />
+        </intent>
+        <!-- Email support check -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="mailto" />
+        </intent>
+        <!-- CustomTabsService support check -->
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
         </intent>
     </queries>
+
 </manifest>
