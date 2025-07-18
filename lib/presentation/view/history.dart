@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:qubic_ai/core/themes/colors.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 
 import '../../core/di/locator.dart';
@@ -26,6 +27,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   late SearchBloc _searchBloc;
   late ScrollController _scrollController;
   bool _showScrollButton = false;
+  bool _showSettingsButton = true;
 
   @override
   void initState() {
@@ -44,9 +46,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void _scrollListener() {
     final isAtBottom = _scrollController.position.pixels <= 100;
     if (!isAtBottom && !_showScrollButton) {
-      setState(() => _showScrollButton = true);
+      setState(() {
+        _showScrollButton = true;
+        _showSettingsButton = false;
+      });
     } else if (isAtBottom && _showScrollButton) {
-      setState(() => _showScrollButton = false);
+      setState(() {
+        _showScrollButton = false;
+        _showSettingsButton = true;
+      });
     }
   }
 
@@ -60,6 +68,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
   }
 
+  void _openSettings() {}
+
   @override
   void dispose() {
     _viewModel.dispose();
@@ -70,12 +80,32 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: _showScrollButton
-          ? BuildFloatingActionButton(
-              onPressed: _scrollToTop,
-              iconData: Icons.arrow_upward,
-            )
-          : null,
+      floatingActionButton: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return ScaleTransition(
+            scale: animation,
+            child: child,
+          );
+        },
+        child: _showScrollButton
+            ? BuildFloatingActionButton(
+                key: const ValueKey('scroll_button'),
+                onPressed: _scrollToTop,
+                iconData: Icons.arrow_upward,
+              )
+            : _showSettingsButton
+                ? FloatingActionButton.small(
+                    key: const ValueKey('settings_button'),
+                    onPressed: _openSettings,
+                    backgroundColor: ColorManager.purple,
+                    child: Icon(
+                      Icons.settings,
+                      color: ColorManager.white,
+                    ),
+                  ).withOnlyPadding(bottom: 10)
+                : null,
+      ),
       body: BlocBuilder<ChatBloc, ChatState>(
         bloc: _chatBloc,
         builder: (context, chatState) {
