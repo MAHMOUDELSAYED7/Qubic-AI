@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,13 +5,13 @@ import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 
 import '../../core/di/locator.dart';
 import '../../core/utils/constants/images.dart';
+import '../../core/widgets/empty_body.dart';
+import '../../core/widgets/floating_action_button.dart';
 import '../bloc/chat/chat_bloc.dart';
 import '../bloc/search/search_bloc.dart';
 import '../viewmodel/search_viewmodel.dart';
-import 'widgets/slidable_chat_card.dart';
-import '../../core/widgets/empty_body.dart';
-import '../../core/widgets/floating_action_button.dart';
 import 'widgets/search_field.dart';
+import 'widgets/slidable_chat_card.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -86,43 +85,41 @@ class _HistoryScreenState extends State<HistoryScreen> {
               final filteredSessions = searchState is SearchResults
                   ? searchState.filteredSessions
                   : _chatBloc.getChatSessions();
-              return FadeInDown(
-                child: CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SearchField(
-                        searchController: _viewModel.searchController,
-                        onChanged: _viewModel.handleSearchChange,
-                        onClear: _viewModel.clearSearch,
+              return CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: SearchField(
+                      searchController: _viewModel.searchController,
+                      onChanged: _viewModel.handleSearchChange,
+                      onClear: _viewModel.clearSearch,
+                    ),
+                  ),
+                  if (filteredSessions.length <= 1)
+                    SliverFillRemaining(
+                      child: const EmptyBodyCard(
+                        title: "No matching chats found",
+                        image: ImageManager.history,
+                      ).center().withOnlyPadding(bottom: 10.h),
+                    )
+                  else
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final session = filteredSessions[index];
+                          final chatMessages =
+                              _chatBloc.getMessages(session.chatId);
+                          return SlidableChatCard(
+                            index: index,
+                            chatSessions: filteredSessions,
+                            chatBloc: _chatBloc,
+                            chatMessages: chatMessages,
+                          );
+                        },
+                        childCount: filteredSessions.length,
                       ),
                     ),
-                    if (filteredSessions.length <= 1)
-                      SliverFillRemaining(
-                        child: const EmptyBodyCard(
-                          title: "No matching chats found",
-                          image: ImageManager.history,
-                        ).center().withOnlyPadding(bottom: 10.h),
-                      )
-                    else
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final session = filteredSessions[index];
-                            final chatMessages =
-                                _chatBloc.getMessages(session.chatId);
-                            return SlidableChatCard(
-                              index: index,
-                              chatSessions: filteredSessions,
-                              chatBloc: _chatBloc,
-                              chatMessages: chatMessages,
-                            );
-                          },
-                          childCount: filteredSessions.length,
-                        ),
-                      ),
-                  ],
-                ),
+                ],
               );
             },
           );
