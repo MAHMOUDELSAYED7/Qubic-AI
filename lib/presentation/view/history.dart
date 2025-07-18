@@ -12,6 +12,7 @@ import '../bloc/chat/chat_bloc.dart';
 import '../bloc/search/search_bloc.dart';
 import '../viewmodel/search_viewmodel.dart';
 import 'widgets/search_field.dart';
+import 'widgets/settings_bottom_sheet.dart';
 import 'widgets/slidable_chat_card.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -68,7 +69,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
   }
 
-  void _openSettings() {}
+  void _openSettings() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const SettingsBottomSheet(),
+    );
+  }
 
   @override
   void dispose() {
