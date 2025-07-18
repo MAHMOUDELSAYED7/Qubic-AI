@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen>
                 textAlign: TextAlign.center,
               ),
               content: Text(
-                'Are you sure you want to logout?',
+                ' Are you sure you want to logout? ',
                 style: context.textTheme.bodySmall,
                 textAlign: TextAlign.center,
               ),
@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildDialogActions(context) => Row(
         children: [
-          SizedBox(width: 10.w),
+          SizedBox(width: 5.w),
           Expanded(
             child: OutlinedButton(
               onPressed: () => Navigator.pop(context, false),
@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-          SizedBox(width: 10.w),
+          SizedBox(width: 5.w),
         ],
       );
 

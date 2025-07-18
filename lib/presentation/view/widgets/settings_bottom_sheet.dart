@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
@@ -70,14 +71,9 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Close',
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: ColorManager.purple,
-              ),
-            ),
+          OutlinedButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -121,14 +117,9 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Close',
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: ColorManager.purple,
-              ),
-            ),
+          OutlinedButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -194,14 +185,9 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Close',
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: ColorManager.purple,
-              ),
-            ),
+          OutlinedButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -262,14 +248,62 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Close',
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: ColorManager.purple,
+          OutlinedButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteAllChatsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: ColorManager.dark,
+        title: Text(
+          'Delete All Chats',
+          textAlign: TextAlign.center,
+          style: context.textTheme.bodyLarge,
+        ),
+        content: SingleChildScrollView(
+          child: Text(
+            'Are you sure you want to delete all chats? This action cannot be undone.',
+            textAlign: TextAlign.center,
+            style: context.textTheme.bodySmall,
+          ),
+        ),
+        actions: [
+          Row(
+            children: [
+              SizedBox(width: 5.w),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
               ),
-            ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: BounceIn(
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        ColorManager.error!,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Delete All',
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 5.w),
+            ],
           ),
         ],
       ),
@@ -444,6 +478,13 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
                           Icons.support_agent,
                           _showSupport,
                         ),
+                        _buildSettingsItem(
+                          'Delete All Chats',
+                          'Clear all chat history permanently',
+                          Icons.delete_forever,
+                          _showDeleteAllChatsDialog,
+                          isDestructive: true,
+                        ),
                         SizedBox(height: 40.h),
                       ],
                     ),
@@ -458,23 +499,28 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
   }
 
   Widget _buildSettingsItem(
-      String title, String subtitle, IconData icon, VoidCallback onTap) {
+      String title, String subtitle, IconData icon, VoidCallback onTap,
+      {bool isDestructive = false}) {
     return Container(
       margin: EdgeInsets.only(bottom: 8.h),
       decoration: BoxDecoration(
-        color: ColorManager.grey.withOpacity(0.1),
+        color: isDestructive
+            ? ColorManager.error?.withOpacity(0.1)
+            : ColorManager.grey.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: ListTile(
         leading: Container(
           padding: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
-            color: ColorManager.purple.withOpacity(0.2),
+            color: isDestructive
+                ? ColorManager.error?.withOpacity(0.2)
+                : ColorManager.purple.withOpacity(0.2),
             borderRadius: BorderRadius.circular(8.r),
           ),
           child: Icon(
             icon,
-            color: ColorManager.purple,
+            color: isDestructive ? ColorManager.error : ColorManager.purple,
             size: 24.w,
           ),
         ),
