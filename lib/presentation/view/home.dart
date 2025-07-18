@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Add this import
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qubic_ai/core/di/locator.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 import 'package:qubic_ai/core/utils/helper/network_status.dart';
@@ -127,14 +128,15 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildDialogActions(context) => Row(
-        spacing: 10,
         children: [
+          SizedBox(width: 10.w),
           Expanded(
             child: OutlinedButton(
               onPressed: () => Navigator.pop(context, false),
               child: const Text('Cancel'),
             ),
           ),
+          SizedBox(width: 10.w),
           Expanded(
             child: BounceIn(
               child: ElevatedButton(
@@ -143,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
+          SizedBox(width: 10.w),
         ],
       );
 

@@ -78,7 +78,7 @@ class _BuildInputFieldState extends State<BuildInputField> {
               margin: EdgeInsets.only(
                   right: 9, left: 9, bottom: context.viewInsetsBottom + 8),
               decoration: BoxDecoration(
-                color: ColorManager.grey.withValues(alpha: 0.12),
+                color: ColorManager.grey.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(30),
                 border: _viewModel.textController.text.isNotEmpty
                     ? Border.all(
@@ -192,7 +192,7 @@ class _BuildInputFieldState extends State<BuildInputField> {
                 ? ColorManager.white
                 : _viewModel.textController.text.trim().isEmpty &&
                         state.selectedImage == null
-                    ? ColorManager.white.withValues(alpha: 0.5)
+                    ? ColorManager.white.withOpacity(0.5)
                     : ColorManager.white,
           ),
           onPressed: () => !widget.isLoading
@@ -226,7 +226,7 @@ class _BuildInputFieldState extends State<BuildInputField> {
             right: 0,
             child: IconButton(
               style: IconButton.styleFrom(
-                backgroundColor: ColorManager.black.withValues(alpha: 0.4),
+                backgroundColor: ColorManager.black.withOpacity(0.4),
               ),
               icon: const Icon(
                 Icons.close,

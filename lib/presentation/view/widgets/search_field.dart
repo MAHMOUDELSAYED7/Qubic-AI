@@ -25,7 +25,7 @@ class SearchField extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: ColorManager.grey.withValues(alpha: 0.18),
+            color: ColorManager.grey.withOpacity(0.18),
             border: searchController.text.isNotEmpty
                 ? Border.all(
                     color: ColorManager.purple,
@@ -52,7 +52,8 @@ class SearchField extends StatelessWidget {
                 onChanged: onChanged,
               ),
             ),
-            _BuildSearchIcon(searchController: searchController, onClear: onClear),
+            _BuildSearchIcon(
+                searchController: searchController, onClear: onClear),
           ],
         ),
       ).withAllPadding(4),
@@ -86,8 +87,7 @@ class _BuildSearchIcon extends StatelessWidget {
       duration: const Duration(milliseconds: 300),
       child: IconButton(
         key: ValueKey<bool>(searchController.text.isNotEmpty),
-        icon: Icon(
-            searchController.text.isEmpty ? Icons.search : Icons.close),
+        icon: Icon(searchController.text.isEmpty ? Icons.search : Icons.close),
         color: searchController.text.isEmpty
             ? ColorManager.grey
             : ColorManager.white,

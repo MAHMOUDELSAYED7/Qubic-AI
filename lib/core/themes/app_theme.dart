@@ -38,7 +38,7 @@ class AppTheme {
         titleSpacing: 0,
         iconTheme: const IconThemeData(color: ColorManager.white),
         elevation: 0,
-        shadowColor: ColorManager.dark.withValues(alpha: 0.3),
+        shadowColor: ColorManager.dark.withOpacity(0.3),
       ),
 
       //-----------------------------------------------------------//* TEXT
@@ -63,7 +63,7 @@ class AppTheme {
       //-----------------------------------------------------------//* TEXT SELECTION
       textSelectionTheme: TextSelectionThemeData(
           cursorColor: ColorManager.grey,
-          selectionColor: ColorManager.grey.withValues(alpha: 0.3),
+          selectionColor: ColorManager.grey.withOpacity(0.3),
           selectionHandleColor: ColorManager.grey),
 
       //--------------------------------------------------//* INPUT DECORATION Text Field
