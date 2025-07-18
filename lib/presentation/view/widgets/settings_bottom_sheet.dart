@@ -322,83 +322,135 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
       minChildSize: 0.7,
       maxChildSize: 1.0,
       builder: (context, scrollController) {
-        return Container(
-          decoration: BoxDecoration(
-            color: ColorManager.dark,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(_currentSize >= 0.95 ? 0 : 20.r),
-            ),
-          ),
-          child: Column(
-            children: [
-              // Handle bar
-              Container(
-                margin: EdgeInsets.only(top: 8.h),
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: ColorManager.grey,
-                  borderRadius: BorderRadius.circular(2.r),
+        return GestureDetector(
+          onPanUpdate: (details) {
+            // Allow dragging from anywhere to expand/collapse the sheet
+            if (details.delta.dy < 0) {
+              // Dragging up - expand to full screen
+              if (_controller.size < 1.0) {
+                _controller.animateTo(
+                  1.0,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              }
+            } else if (details.delta.dy > 0) {
+              // Dragging down - collapse to 70%
+              if (_controller.size > 0.7) {
+                _controller.animateTo(
+                  0.7,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              }
+            }
+          },
+          child: SafeArea(
+            child: Container(
+              decoration: BoxDecoration(
+                color: ColorManager.dark,
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(_currentSize >= 0.95 ? 0 : 20.r),
                 ),
               ),
-              // Header
-              Padding(
-                padding: EdgeInsets.all(16.w),
-                child: Row(
-                  children: [
-                    Text(
-                      'Settings',
-                      style: context.textTheme.headlineSmall?.copyWith(
-                        color: ColorManager.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(
-                        Icons.close,
+              child: Column(
+                children: [
+                  // Handle bar - only show when not full screen
+                  if (_currentSize < 0.95) ...[
+                    Container(
+                      margin: EdgeInsets.only(top: 10.h),
+                      width: 40.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
                         color: ColorManager.grey,
+                        borderRadius: BorderRadius.circular(2.r),
                       ),
                     ),
+                  ] else ...[
+                    SizedBox(height: 14.h),
                   ],
-                ),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    padding: EdgeInsets.all(16.w),
+                    decoration: _currentSize >= 0.95
+                        ? BoxDecoration(
+                            color: ColorManager.dark,
+                          )
+                        : null,
+                    child: Row(
+                      children: [
+                        AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          style: context.textTheme.headlineSmall?.copyWith(
+                                color: ColorManager.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: _currentSize >= 0.95 ? 18.sp : 20.sp,
+                              ) ??
+                              const TextStyle(),
+                          child: const Text('Settings'),
+                        ),
+                        const Spacer(),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.r),
+                          ),
+                          child: IconButton(
+                            onPressed: () => Navigator.pop(context),
+                            icon: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                              child: Icon(
+                                Icons.close,
+                                color: ColorManager.grey,
+                                size: _currentSize >= 0.95 ? 20.w : 24.w,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Expanded(
+                    child: ListView(
+                      controller: scrollController,
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
+                      children: [
+                        _buildSettingsItem(
+                          'Terms of Service',
+                          'Read our terms and conditions',
+                          Icons.description,
+                          _showTermsOfService,
+                        ),
+                        _buildSettingsItem(
+                          'Privacy Policy',
+                          'How we handle your data',
+                          Icons.privacy_tip,
+                          _showPrivacyPolicy,
+                        ),
+                        _buildSettingsItem(
+                          'About Us',
+                          'Learn more about Qubic AI',
+                          Icons.info,
+                          _showAboutUs,
+                        ),
+                        _buildSettingsItem(
+                          'Support',
+                          'Get help and contact us',
+                          Icons.support_agent,
+                          _showSupport,
+                        ),
+                        SizedBox(height: 40.h),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              // Content
-              Expanded(
-                child: ListView(
-                  controller: scrollController,
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  children: [
-                    _buildSettingsItem(
-                      'Terms of Service',
-                      'Read our terms and conditions',
-                      Icons.description,
-                      _showTermsOfService,
-                    ),
-                    _buildSettingsItem(
-                      'Privacy Policy',
-                      'How we handle your data',
-                      Icons.privacy_tip,
-                      _showPrivacyPolicy,
-                    ),
-                    _buildSettingsItem(
-                      'About Us',
-                      'Learn more about Qubic AI',
-                      Icons.info,
-                      _showAboutUs,
-                    ),
-                    _buildSettingsItem(
-                      'Support',
-                      'Get help and contact us',
-                      Icons.support_agent,
-                      _showSupport,
-                    ),
-                    SizedBox(height: 40.h),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         );
       },
