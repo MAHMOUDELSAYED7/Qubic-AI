@@ -7,6 +7,7 @@ import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 import '../../../core/di/locator.dart';
 import '../../../core/themes/colors.dart';
 import '../../../core/utils/helper/custom_toast.dart';
+import '../../bloc/chat/chat_bloc.dart';
 import '../../bloc/launch_uri/launch_uri_cubit.dart';
 
 class SettingsBottomSheet extends StatefulWidget {
@@ -26,6 +27,8 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
     _controller = DraggableScrollableController();
     _controller.addListener(_onSizeChanged);
   }
+
+  final _chatBloc = sl<ChatBloc>();
 
   void _onSizeChanged() {
     setState(() {
@@ -319,52 +322,66 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
   void _showDeleteAllChatsDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: ColorManager.dark,
-        title: Text(
-          'Delete All Chats',
-          textAlign: TextAlign.center,
-          style: context.textTheme.bodyLarge,
-        ),
-        content: SingleChildScrollView(
-          child: Text(
-            'Are you sure you want to delete all chats? This action cannot be undone.',
+      builder: (context) => BlocListener<ChatBloc, ChatState>(
+        bloc: _chatBloc,
+        listener: (context, state) {
+          if (state is AllChatsDeleted) {
+            // _chatBloc.add(const CreateNewChatSessionEvent());
+            showCustomToast(
+              context,
+              message: 'All chats deleted successfully',
+              color: ColorManager.purple,
+            );
+          }
+        },
+        child: AlertDialog(
+          backgroundColor: ColorManager.dark,
+          title: Text(
+            'Delete All Chats',
             textAlign: TextAlign.center,
-            style: context.textTheme.bodySmall,
+            style: context.textTheme.bodyLarge,
           ),
-        ),
-        actions: [
-          Row(
-            children: [
-              SizedBox(width: 5.w),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Cancel'),
+          content: SingleChildScrollView(
+            child: Text(
+              'Are you sure you want to delete all chats? This action cannot be undone.',
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodySmall,
+            ),
+          ),
+          actions: [
+            Row(
+              children: [
+                SizedBox(width: 5.w),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Cancel'),
+                  ),
                 ),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: BounceIn(
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        ColorManager.error!,
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: BounceIn(
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll<Color>(
+                          ColorManager.error!,
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      'Delete All',
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+
+                        _chatBloc.add(const DeleteAllChatsEvent());
+                      },
+                      child: const Text('Delete All'),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(width: 5.w),
-            ],
-          ),
-        ],
+                SizedBox(width: 5.w),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -417,9 +434,7 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
       builder: (context, scrollController) {
         return GestureDetector(
           onPanUpdate: (details) {
-            // Allow dragging from anywhere to expand/collapse the sheet
             if (details.delta.dy < 0) {
-              // Dragging up - expand to full screen
               if (_controller.size < 1.0) {
                 _controller.animateTo(
                   1.0,
@@ -428,7 +443,6 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
                 );
               }
             } else if (details.delta.dy > 0) {
-              // Dragging down - collapse to 70%
               if (_controller.size > 0.7) {
                 _controller.animateTo(
                   0.7,
@@ -448,7 +462,6 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
               ),
               child: Column(
                 children: [
-                  // Handle bar - only show when not full screen
                   if (_currentSize < 0.95) ...[
                     Container(
                       margin: EdgeInsets.only(top: 10.h),
@@ -507,7 +520,6 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
                       ],
                     ),
                   ),
-
                   Expanded(
                     child: ListView(
                       controller: scrollController,

@@ -23,6 +23,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<StreamDataEvent>(_onStreamData);
     on<CreateNewChatSessionEvent>(_onCreateNewChatSession);
     on<DeleteChatSessionEvent>(_onDeleteChatSession);
+    on<DeleteAllChatsEvent>(_onDeleteAllChats);
   }
 
   Future<void> _onCreateNewChatSession(
@@ -60,6 +61,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(ChatSessionDeleted(event.chatId));
     } catch (error) {
       emit(ChatFailure("Failed to delete chat session"));
+    }
+  }
+
+  Future<void> _onDeleteAllChats(
+      DeleteAllChatsEvent event, Emitter<ChatState> emit) async {
+    try {
+      await _messageRepository.deleteAllChats();
+      emit(AllChatsDeleted());
+    } catch (error) {
+      emit(ChatFailure("Failed to delete all chats: ${error.toString()}"));
     }
   }
 

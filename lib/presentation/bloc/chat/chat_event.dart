@@ -61,3 +61,10 @@ class DeleteChatSessionEvent extends ChatEvent {
   @override
   List<Object?> get props => [chatId];
 }
+
+class DeleteAllChatsEvent extends ChatEvent {
+  const DeleteAllChatsEvent();
+
+  @override
+  List<Object?> get props => [];
+}

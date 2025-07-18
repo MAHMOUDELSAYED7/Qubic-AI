@@ -39,4 +39,6 @@ class ChatSessionDeleted extends ChatState {
   ChatSessionDeleted(this.chatId);
 }
 
+class AllChatsDeleted extends ChatState {}
+
 class ChatListUpdated extends ChatState {}
