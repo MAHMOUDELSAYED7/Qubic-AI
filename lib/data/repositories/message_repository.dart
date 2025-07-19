@@ -89,6 +89,22 @@ class MessageRepository {
     return newChatId;
   }
 
+  int createNewChatSessionSync() {
+    final lastChatId = _sessionBox.values.isEmpty
+        ? 0
+        : _sessionBox.values
+            .map((session) => session.chatId)
+            .reduce((a, b) => a > b ? a : b);
+
+    final newChatId = lastChatId + 1;
+    final session = ChatSession(
+      chatId: newChatId,
+      createdAt: DateTime.now().toString(),
+    );
+    _sessionBox.add(session);
+    return newChatId;
+  }
+
   List<ChatSession> getChatSessions() {
     if (_sessionBox.values.isEmpty) {
       return [];

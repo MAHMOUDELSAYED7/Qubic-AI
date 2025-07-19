@@ -51,18 +51,20 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
   void _showTermsOfService(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: ColorManager.dark,
-        title: Text(
-          'Terms of Service for Qubic AI',
-          style: context.textTheme.headlineSmall?.copyWith(
-            color: ColorManager.white,
+      builder: (context) => FractionallySizedBox(
+        widthFactor: 1.1,
+        child: AlertDialog(
+          backgroundColor: ColorManager.dark,
+          title: Text(
+            'Terms of Service for Qubic AI',
+            style: context.textTheme.titleMedium?.copyWith(
+              color: ColorManager.white,
+            ),
           ),
-        ),
-        content: SingleChildScrollView(
-          child: MarkdownBody(
-            selectable: true,
-            data: '''
+          content: SingleChildScrollView(
+            child: MarkdownBody(
+              selectable: true,
+              data: '''
 **Effective Date**: July 19, 2025
 
 ## 1. Acceptance of Terms
@@ -111,52 +113,53 @@ For questions or concerns about these Terms, contact:
 **Mahmoud El Sayed**  
 **Email**: [mahmoudelsayed.dev@gmail.com](mailto:mahmoudelsayed.dev@gmail.com)
           ''',
-            styleSheet: MarkdownStyleSheet(
-              p: context.textTheme.bodyMedium?.copyWith(
-                color: ColorManager.grey,
+              styleSheet: MarkdownStyleSheet(
+                p: context.textTheme.bodyMedium?.copyWith(
+                  color: ColorManager.grey,
+                ),
+                h1: context.textTheme.titleMedium?.copyWith(
+                  color: ColorManager.white,
+                ),
+                h2: context.textTheme.titleLarge?.copyWith(
+                  color: ColorManager.white,
+                ),
+                a: TextStyle(
+                  color: ColorManager.grey,
+                  decoration: TextDecoration.underline,
+                  decorationColor: ColorManager.grey,
+                ),
               ),
-              h1: context.textTheme.headlineSmall?.copyWith(
-                color: ColorManager.white,
-              ),
-              h2: context.textTheme.titleLarge?.copyWith(
-                color: ColorManager.white,
-              ),
-              a: TextStyle(
-                color: ColorManager.grey,
-                decoration: TextDecoration.underline,
-                decorationColor: ColorManager.grey,
-              ),
-            ),
-            onTapLink: (text, url, title) async {
-              if (url != null) {
-                if (url.startsWith('mailto:')) {
-                  try {
-                    await launchUrl(Uri.parse(url));
-                  } catch (e) {
-                    showCustomToast(context,
-                        color: ColorManager.error,
-                        message: 'Failed to open email app');
-                  }
-                } else if (url.startsWith('https:')) {
-                  try {
-                    await launchUrl(Uri.parse(url),
-                        mode: LaunchMode.externalApplication);
-                  } catch (e) {
-                    showCustomToast(context,
-                        color: ColorManager.error,
-                        message: 'Failed to open link');
+              onTapLink: (text, url, title) async {
+                if (url != null) {
+                  if (url.startsWith('mailto:')) {
+                    try {
+                      await launchUrl(Uri.parse(url));
+                    } catch (e) {
+                      showCustomToast(context,
+                          color: ColorManager.error,
+                          message: 'Failed to open email app');
+                    }
+                  } else if (url.startsWith('https:')) {
+                    try {
+                      await launchUrl(Uri.parse(url),
+                          mode: LaunchMode.externalApplication);
+                    } catch (e) {
+                      showCustomToast(context,
+                          color: ColorManager.error,
+                          message: 'Failed to open link');
+                    }
                   }
                 }
-              }
-            },
+              },
+            ),
           ),
+          actions: [
+            OutlinedButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+          ],
         ),
-        actions: [
-          OutlinedButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-        ],
       ),
     );
   }
@@ -164,18 +167,20 @@ For questions or concerns about these Terms, contact:
   void _showPrivacyPolicy(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: ColorManager.dark,
-        title: Text(
-          'Privacy Policy for Qubic AI',
-          style: context.textTheme.headlineSmall?.copyWith(
-            color: ColorManager.white,
+      builder: (context) => FractionallySizedBox(
+        widthFactor: 1.1,
+        child: AlertDialog(
+          backgroundColor: ColorManager.dark,
+          title: Text(
+            'Privacy Policy for Qubic AI',
+            style: context.textTheme.titleMedium?.copyWith(
+              color: ColorManager.white,
+            ),
           ),
-        ),
-        content: SingleChildScrollView(
-          child: MarkdownBody(
-            selectable: true,
-            data: '''
+          content: SingleChildScrollView(
+            child: MarkdownBody(
+              selectable: true,
+              data: '''
 **Effective Date**: July 19, 2025
 
 ## Introduction
@@ -209,52 +214,53 @@ For questions or concerns about this Privacy Policy, contact:
 **Mahmoud El Sayed**  
 **Email**: [mahmoudelsayed.dev@gmail.com](mailto:mahmoudelsayed.dev@gmail.com)
           ''',
-            styleSheet: MarkdownStyleSheet(
-              p: context.textTheme.bodyMedium?.copyWith(
-                color: ColorManager.grey,
+              styleSheet: MarkdownStyleSheet(
+                p: context.textTheme.bodyMedium?.copyWith(
+                  color: ColorManager.grey,
+                ),
+                h1: context.textTheme.titleMedium?.copyWith(
+                  color: ColorManager.white,
+                ),
+                h2: context.textTheme.titleLarge?.copyWith(
+                  color: ColorManager.white,
+                ),
+                a: TextStyle(
+                  color: ColorManager.grey,
+                  decoration: TextDecoration.underline,
+                  decorationColor: ColorManager.grey,
+                ),
               ),
-              h1: context.textTheme.headlineSmall?.copyWith(
-                color: ColorManager.white,
-              ),
-              h2: context.textTheme.titleLarge?.copyWith(
-                color: ColorManager.white,
-              ),
-              a: TextStyle(
-                color: ColorManager.grey,
-                decoration: TextDecoration.underline,
-                decorationColor: ColorManager.grey,
-              ),
-            ),
-            onTapLink: (text, url, title) async {
-              if (url != null) {
-                if (url.startsWith('mailto:')) {
-                  try {
-                    await launchUrl(Uri.parse(url));
-                  } catch (e) {
-                    showCustomToast(context,
-                        color: ColorManager.error,
-                        message: 'Failed to open email app');
-                  }
-                } else if (url.startsWith('https:')) {
-                  try {
-                    await launchUrl(Uri.parse(url),
-                        mode: LaunchMode.externalApplication);
-                  } catch (e) {
-                    showCustomToast(context,
-                        color: ColorManager.error,
-                        message: 'Failed to open link');
+              onTapLink: (text, url, title) async {
+                if (url != null) {
+                  if (url.startsWith('mailto:')) {
+                    try {
+                      await launchUrl(Uri.parse(url));
+                    } catch (e) {
+                      showCustomToast(context,
+                          color: ColorManager.error,
+                          message: 'Failed to open email app');
+                    }
+                  } else if (url.startsWith('https:')) {
+                    try {
+                      await launchUrl(Uri.parse(url),
+                          mode: LaunchMode.externalApplication);
+                    } catch (e) {
+                      showCustomToast(context,
+                          color: ColorManager.error,
+                          message: 'Failed to open link');
+                    }
                   }
                 }
-              }
-            },
+              },
+            ),
           ),
+          actions: [
+            OutlinedButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+          ],
         ),
-        actions: [
-          OutlinedButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-        ],
       ),
     );
   }
@@ -262,18 +268,20 @@ For questions or concerns about this Privacy Policy, contact:
   void _showAboutUs(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: ColorManager.dark,
-        title: Text(
-          'About Qubic AI',
-          style: context.textTheme.headlineSmall?.copyWith(
-            color: ColorManager.white,
+      builder: (context) => FractionallySizedBox(
+        widthFactor: 1.1,
+        child: AlertDialog(
+          backgroundColor: ColorManager.dark,
+          title: Text(
+            'About Qubic AI',
+            style: context.textTheme.titleMedium?.copyWith(
+              color: ColorManager.white,
+            ),
           ),
-        ),
-        content: SingleChildScrollView(
-          child: MarkdownBody(
-            selectable: true,
-            data: '''
+          content: SingleChildScrollView(
+            child: MarkdownBody(
+              selectable: true,
+              data: '''
 **Version**: 1.0.0  
 **Updated**: July 19, 2025
 
@@ -303,57 +311,58 @@ For questions, feedback, or support, please reach out:
 - Review our **Privacy Policy** for details on how we handle your data.
 - See our **Terms of Service** for the rules governing the use of Qubic AI.
           ''',
-            styleSheet: MarkdownStyleSheet(
-              p: context.textTheme.bodyMedium?.copyWith(
-                color: ColorManager.grey,
+              styleSheet: MarkdownStyleSheet(
+                p: context.textTheme.bodyMedium?.copyWith(
+                  color: ColorManager.grey,
+                ),
+                h1: context.textTheme.titleMedium?.copyWith(
+                  color: ColorManager.white,
+                ),
+                h2: context.textTheme.titleLarge?.copyWith(
+                  color: ColorManager.white,
+                ),
+                a: TextStyle(
+                  color: ColorManager.grey,
+                  decoration: TextDecoration.underline,
+                  decorationColor: ColorManager.grey,
+                ),
               ),
-              h1: context.textTheme.headlineSmall?.copyWith(
-                color: ColorManager.white,
-              ),
-              h2: context.textTheme.titleLarge?.copyWith(
-                color: ColorManager.white,
-              ),
-              a: TextStyle(
-                color: ColorManager.grey,
-                decoration: TextDecoration.underline,
-                decorationColor: ColorManager.grey,
-              ),
-            ),
-            onTapLink: (text, url, title) async {
-              if (url != null) {
-                if (url.startsWith('mailto:')) {
-                  try {
-                    await launchUrl(Uri.parse(url));
-                  } catch (e) {
-                    showCustomToast(context,
-                        color: ColorManager.error,
-                        message: 'Failed to open email app');
-                  }
-                } else if (url.startsWith('https:')) {
-                  try {
-                    await launchUrl(Uri.parse(url),
-                        mode: LaunchMode.externalApplication);
-                  } catch (e) {
-                    showCustomToast(context,
-                        color: ColorManager.error,
-                        message: 'Failed to open link');
+              onTapLink: (text, url, title) async {
+                if (url != null) {
+                  if (url.startsWith('mailto:')) {
+                    try {
+                      await launchUrl(Uri.parse(url));
+                    } catch (e) {
+                      showCustomToast(context,
+                          color: ColorManager.error,
+                          message: 'Failed to open email app');
+                    }
+                  } else if (url.startsWith('https:')) {
+                    try {
+                      await launchUrl(Uri.parse(url),
+                          mode: LaunchMode.externalApplication);
+                    } catch (e) {
+                      showCustomToast(context,
+                          color: ColorManager.error,
+                          message: 'Failed to open link');
+                    }
                   }
                 }
-              }
-            },
-          ),
-        ),
-        actions: [
-          OutlinedButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(
-              'Close',
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: ColorManager.white,
-              ),
+              },
             ),
           ),
-        ],
+          actions: [
+            OutlinedButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(
+                'Close',
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: ColorManager.white,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -361,84 +370,88 @@ For questions, feedback, or support, please reach out:
   void _showSupport() {
     showDialog(
       context: context,
-      builder: (context) => BlocProvider(
-        create: (_) => sl<LaunchUriCubit>(),
-        child: Builder(
-          builder: (context) => AlertDialog(
-            backgroundColor: ColorManager.dark,
-            title: Text(
-              'Support',
-              style: context.textTheme.headlineSmall?.copyWith(
-                color: ColorManager.white,
+      builder: (context) => FractionallySizedBox(
+        widthFactor: 1.1,
+        child: BlocProvider(
+          create: (_) => sl<LaunchUriCubit>(),
+          child: Builder(
+            builder: (context) => AlertDialog(
+              backgroundColor: ColorManager.dark,
+              title: Text(
+                'Support',
+                style: context.textTheme.titleMedium?.copyWith(
+                  color: ColorManager.white,
+                ),
               ),
-            ),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Need help? We\'re here to support you!',
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: ColorManager.grey,
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Need help? We\'re here to support you!',
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: ColorManager.grey,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 16.h),
-                  _buildEmailLink(context, 'mahmoudelsayed.dev@gmail.com'),
-                  SizedBox(height: 12.h),
-                  _buildSupportOption(
-                    'FAQ',
-                    'Check our frequently asked questions',
-                    Icons.help_outline,
-                    () => context.read<LaunchUriCubit>().openEmailApp(
-                          email: 'mahmoudelsayed.dev@gmail.com',
-                          subject: 'FAQ - Qubic AI',
-                          body: 'Please enter your question for the FAQ:\n\n',
-                        ),
-                  ),
-                  SizedBox(height: 12.h),
-                  _buildSupportOption(
-                    'Report Bug',
-                    'Help us improve by reporting issues',
-                    Icons.bug_report,
-                    () => context.read<LaunchUriCubit>().openEmailApp(
-                          email: 'mahmoudelsayed.dev@gmail.com',
-                          subject: 'Bug Report - Qubic AI',
-                          body: 'Please describe the bug you encountered:\n\n',
-                        ),
-                  ),
-                  SizedBox(height: 12.h),
-                  _buildSupportOption(
-                    'Feature Request',
-                    'Suggest new features',
-                    Icons.lightbulb_outline,
-                    () => context.read<LaunchUriCubit>().openEmailApp(
-                          email: 'mahmoudelsayed.dev@gmail.com',
-                          subject: 'Feature Request - Qubic AI',
-                          body:
-                              'I would like to suggest the following feature:\n\n',
-                        ),
-                  ),
-                  SizedBox(height: 12.h),
-                  _buildSupportOption(
-                    'General Support',
-                    'Get help with any questions',
-                    Icons.support_agent,
-                    () => context.read<LaunchUriCubit>().openEmailApp(
-                          email: 'mahmoudelsayed.dev@gmail.com',
-                          subject: 'Support Request - Qubic AI',
-                          body: 'Hello, I need help with:\n\n',
-                        ),
-                  ),
-                ],
+                    SizedBox(height: 16.h),
+                    _buildEmailLink(context, 'mahmoudelsayed.dev@gmail.com'),
+                    SizedBox(height: 12.h),
+                    _buildSupportOption(
+                      'FAQ',
+                      'Check our frequently asked questions',
+                      Icons.help_outline,
+                      () => context.read<LaunchUriCubit>().openEmailApp(
+                            email: 'mahmoudelsayed.dev@gmail.com',
+                            subject: 'FAQ - Qubic AI',
+                            body: 'Please enter your question for the FAQ:\n\n',
+                          ),
+                    ),
+                    SizedBox(height: 12.h),
+                    _buildSupportOption(
+                      'Report Bug',
+                      'Help us improve by reporting issues',
+                      Icons.bug_report,
+                      () => context.read<LaunchUriCubit>().openEmailApp(
+                            email: 'mahmoudelsayed.dev@gmail.com',
+                            subject: 'Bug Report - Qubic AI',
+                            body:
+                                'Please describe the bug you encountered:\n\n',
+                          ),
+                    ),
+                    SizedBox(height: 12.h),
+                    _buildSupportOption(
+                      'Feature Request',
+                      'Suggest new features',
+                      Icons.lightbulb_outline,
+                      () => context.read<LaunchUriCubit>().openEmailApp(
+                            email: 'mahmoudelsayed.dev@gmail.com',
+                            subject: 'Feature Request - Qubic AI',
+                            body:
+                                'I would like to suggest the following feature:\n\n',
+                          ),
+                    ),
+                    SizedBox(height: 12.h),
+                    _buildSupportOption(
+                      'General Support',
+                      'Get help with any questions',
+                      Icons.support_agent,
+                      () => context.read<LaunchUriCubit>().openEmailApp(
+                            email: 'mahmoudelsayed.dev@gmail.com',
+                            subject: 'Support Request - Qubic AI',
+                            body: 'Hello, I need help with:\n\n',
+                          ),
+                    ),
+                  ],
+                ),
               ),
+              actions: [
+                OutlinedButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
+              ],
             ),
-            actions: [
-              OutlinedButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
-              ),
-            ],
           ),
         ),
       ),
@@ -486,66 +499,68 @@ For questions, feedback, or support, please reach out:
   void _showDeleteAllChatsDialog() {
     showDialog(
       context: context,
-      builder: (context) => BlocListener<ChatBloc, ChatState>(
-        bloc: _chatBloc,
-        listener: (context, state) {
-          if (state is AllChatsDeleted) {
-            _chatBloc.add(const CreateNewChatSessionEvent());
-            showCustomToast(
-              context,
-              message: 'All chats deleted successfully',
-              color: ColorManager.purple,
-            );
-          } else if (state is NewChatSessionCreated) {
-            _chatBloc.add(const ChatListUpdatedEvent());
-          }
-        },
-        child: AlertDialog(
-          backgroundColor: ColorManager.dark,
-          title: Text(
-            'Delete All Chats',
-            textAlign: TextAlign.center,
-            style: context.textTheme.bodyLarge,
-          ),
-          content: SingleChildScrollView(
-            child: Text(
-              'Are you sure you want to delete all chats? This action cannot be undone.',
+      builder: (context) => FractionallySizedBox(
+        child: BlocListener<ChatBloc, ChatState>(
+          bloc: _chatBloc,
+          listener: (context, state) {
+            if (state is AllChatsDeleted) {
+              _chatBloc.add(const CreateNewChatSessionEvent());
+              showCustomToast(
+                context,
+                message: 'All chats deleted successfully',
+                color: ColorManager.purple,
+              );
+            } else if (state is NewChatSessionCreated) {
+              _chatBloc.add(const ChatListUpdatedEvent());
+            }
+          },
+          child: AlertDialog(
+            backgroundColor: ColorManager.dark,
+            title: Text(
+              'Delete All Chats',
               textAlign: TextAlign.center,
-              style: context.textTheme.bodySmall,
+              style: context.textTheme.bodyLarge,
             ),
-          ),
-          actions: [
-            Row(
-              children: [
-                SizedBox(width: 5.w),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: const Text('Cancel'),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: BounceIn(
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll<Color>(
-                          ColorManager.error!,
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        _chatBloc.add(const DeleteAllChatsEvent());
-                      },
-                      child: const Text('Delete All'),
+            content: SingleChildScrollView(
+              child: Text(
+                'Are you sure you want to delete all chats? This action cannot be undone.',
+                textAlign: TextAlign.center,
+                style: context.textTheme.bodySmall,
+              ),
+            ),
+            actions: [
+              Row(
+                children: [
+                  SizedBox(width: 5.w),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Cancel'),
                     ),
                   ),
-                ),
-                SizedBox(width: 5.w),
-              ],
-            ),
-          ],
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: BounceIn(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll<Color>(
+                            ColorManager.error!,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          _chatBloc.add(const DeleteAllChatsEvent());
+                        },
+                        child: const Text('Delete'),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 5.w),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
