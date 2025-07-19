@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:google_generative_ai/google_generative_ai.dart' as ai;
 import 'package:meta/meta.dart';
 
+import '../../../core/utils/constants/ai_content.dart';
 import '../../../core/utils/helper/network_status.dart';
 import '../../../data/models/hive.dart';
 import '../../../data/repositories/message_repository.dart';
@@ -86,7 +87,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       if (!await NetworkManager.isConnected()) {
         emit(ChatFailure("No internet connection"));
       }
-
       await _messageRepository.addMessage(
         chatId: event.chatId,
         isUser: true,
@@ -106,7 +106,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         }
       }).toList();
 
-      final response = await _webService.postData(contents);
+      final allContents = [...AiConstantsContent.content, ...contents];
+
+      final response = await _webService.postData(allContents);
       if (response != null) {
         await _messageRepository.addMessage(
           chatId: event.chatId,
@@ -154,7 +156,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         }
       }).toList();
 
-      await for (final chunk in _webService.streamData(contents)) {
+      final allContents = [...AiConstantsContent.content, ...contents];
+
+      await for (final chunk in _webService.streamData(allContents)) {
         if (chunk != null) {
           fullResponse.write(chunk);
           await Future.delayed(Duration(milliseconds: 200));
