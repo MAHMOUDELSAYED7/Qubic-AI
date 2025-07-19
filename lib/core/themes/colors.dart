@@ -19,7 +19,7 @@ class ColorManager {
   ];
 
   // Code block colors
-  static Color? codeBlockBg = Colors.black.withValues(alpha: 0.3);
+  static Color? codeBlockBg = Colors.black.withOpacity(0.3);
   static const Color codeHeaderBg = Color(0xFF3A3A3A);
   static const Color codeHeaderText = Color(0xFF858585);
   static const Color codeHeaderIcon = Color(0xFFB3B3B3);

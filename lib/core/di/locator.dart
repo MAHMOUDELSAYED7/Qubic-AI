@@ -5,6 +5,7 @@ import '../../data/source/apis/generative_ai_web_service.dart';
 import '../../data/source/database/hive_service.dart';
 import '../../presentation/bloc/chat/chat_bloc.dart';
 import '../../presentation/bloc/input/input_field_bloc.dart';
+import '../../presentation/bloc/launch_uri/launch_uri_cubit.dart';
 import '../../presentation/bloc/search/search_bloc.dart';
 import '../service/image_packer.dart';
 import '../service/text_recognition.dart';
@@ -24,9 +25,9 @@ void setupServiceLocator() {
       ));
   sl.registerLazySingleton<SearchBloc>(() => SearchBloc(sl<ChatBloc>()));
   sl.registerLazySingleton<InputFieldBloc>(() => InputFieldBloc());
+  sl.registerFactory<LaunchUriCubit>(() => LaunchUriCubit());
 
   sl.registerLazySingleton<ImagePickerService>(() => ImagePickerService());
   sl.registerLazySingleton<TextRecognitionService>(
       () => TextRecognitionService());
-
 }

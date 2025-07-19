@@ -3,8 +3,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 import 'package:qubic_ai/core/utils/helper/custom_toast.dart';
 
-import '../../../core/themes/colors.dart';
 import '../../../core/router/routes.dart';
+import '../../../core/themes/colors.dart';
 import '../../../core/utils/helper/regexp_methods.dart';
 import '../../../data/models/hive.dart';
 import '../../bloc/chat/chat_bloc.dart';
@@ -36,6 +36,9 @@ class SlidableChatCard extends StatelessWidget {
           children: [
             SlidableAction(
               onPressed: (_) {
+                chatSessions.length <= 1
+                    ? _chatBloc.add(CreateNewChatSessionEvent())
+                    : null;
                 _chatBloc.add(DeleteChatSessionEvent(session.chatId));
                 chatSessions.removeAt(index);
                 showCustomToast(
@@ -84,8 +87,7 @@ class SlidableChatCard extends StatelessWidget {
                     style: context.textTheme.bodySmall
                         ?.copyWith(color: ColorManager.grey),
                   ),
-                  onTap: ()=>
-                  Navigator.pushNamed(
+                  onTap: () => Navigator.pushNamed(
                     context,
                     RouteManager.chat,
                     arguments: [session.chatId, _chatBloc],
@@ -97,4 +99,3 @@ class SlidableChatCard extends StatelessWidget {
     );
   }
 }
-

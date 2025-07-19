@@ -1,4 +1,4 @@
-package com.example.qubic_ai
+package com.qubic_ai.app
 
 import io.flutter.embedding.android.FlutterActivity
 

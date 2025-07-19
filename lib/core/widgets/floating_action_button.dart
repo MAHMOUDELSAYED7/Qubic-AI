@@ -5,6 +5,7 @@ import '../themes/colors.dart';
 
 class BuildFloatingActionButton extends StatelessWidget {
   const BuildFloatingActionButton({super.key, this.onPressed, this.iconData});
+
   final void Function()? onPressed;
   final IconData? iconData;
 
@@ -12,7 +13,7 @@ class BuildFloatingActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton.small(
       shape: const CircleBorder(),
-      splashColor: ColorManager.white.withValues(alpha: 0.3),
+      splashColor: ColorManager.white.withOpacity(0.3),
       elevation: 2,
       onPressed: onPressed,
       backgroundColor: ColorManager.purple,

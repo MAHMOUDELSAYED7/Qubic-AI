@@ -91,26 +91,7 @@ class MessageRepository {
 
   List<ChatSession> getChatSessions() {
     if (_sessionBox.values.isEmpty) {
-      return [
-        ChatSession(
-          chatId: 1,
-          messages: [
-            Message(
-              chatId: 1,
-              isUser: true,
-              message: "Hello",
-              timestamp: DateTime.now().toString(),
-            ),
-            Message(
-              chatId: 1,
-              isUser: false,
-              message: "How Can I help you today?",
-              timestamp: DateTime.now().toString(),
-            ),
-          ],
-          createdAt: DateTime.now().toString(),
-        ),
-      ];
+      return [];
     }
     return _sessionBox.values.toList();
   }
@@ -120,5 +101,28 @@ class MessageRepository {
         _sessionBox.values.firstWhere((session) => session.chatId == chatId);
     await session.delete();
     await clearMessages(chatId);
+  }
+
+  Future<void> deleteAllChats() async {
+    try {
+      await _messageBox.clear();
+
+      await _sessionBox.clear();
+
+      final defaultSession = ChatSession(
+        chatId: 1,
+        messages: [],
+        createdAt: DateTime.now().toString(),
+      );
+
+      await _sessionBox.add(defaultSession);
+
+      for (final message in defaultSession.messages) {
+        await _messageBox.add(message);
+      }
+    } catch (err) {
+      log("Error deleting all chats: $err");
+      rethrow;
+    }
   }
 }

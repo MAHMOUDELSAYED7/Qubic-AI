@@ -1,18 +1,19 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:qubic_ai/core/themes/colors.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 
 import '../../core/di/locator.dart';
 import '../../core/utils/constants/images.dart';
+import '../../core/widgets/empty_body.dart';
+import '../../core/widgets/floating_action_button.dart';
 import '../bloc/chat/chat_bloc.dart';
 import '../bloc/search/search_bloc.dart';
 import '../viewmodel/search_viewmodel.dart';
-import 'widgets/slidable_chat_card.dart';
-import '../../core/widgets/empty_body.dart';
-import '../../core/widgets/floating_action_button.dart';
 import 'widgets/search_field.dart';
+import 'widgets/settings_bottom_sheet.dart';
+import 'widgets/slidable_chat_card.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -27,6 +28,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   late SearchBloc _searchBloc;
   late ScrollController _scrollController;
   bool _showScrollButton = false;
+  bool _showSettingsButton = true;
 
   @override
   void initState() {
@@ -45,9 +47,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void _scrollListener() {
     final isAtBottom = _scrollController.position.pixels <= 100;
     if (!isAtBottom && !_showScrollButton) {
-      setState(() => _showScrollButton = true);
+      setState(() {
+        _showScrollButton = true;
+        _showSettingsButton = false;
+      });
     } else if (isAtBottom && _showScrollButton) {
-      setState(() => _showScrollButton = false);
+      setState(() {
+        _showScrollButton = false;
+        _showSettingsButton = true;
+      });
     }
   }
 
@@ -61,6 +69,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
   }
 
+  void _openSettings() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SettingsBottomSheet(
+        chatBloc: _chatBloc,
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _viewModel.dispose();
@@ -71,58 +90,82 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: _showScrollButton
-          ? BuildFloatingActionButton(
-              onPressed: _scrollToTop,
-              iconData: Icons.arrow_upward,
-            )
-          : null,
+      floatingActionButton: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return ScaleTransition(
+            scale: animation,
+            child: child,
+          );
+        },
+        child: _showScrollButton
+            ? BuildFloatingActionButton(
+                key: const ValueKey('scroll_button'),
+                onPressed: _scrollToTop,
+                iconData: Icons.arrow_upward,
+              )
+            : _showSettingsButton
+                ? FloatingActionButton.small(
+                    key: const ValueKey('settings_button'),
+                    onPressed: _openSettings,
+                    backgroundColor: ColorManager.purple,
+                    child: Icon(
+                      Icons.settings,
+                      color: ColorManager.white,
+                    ),
+                  ).withOnlyPadding(bottom: 10)
+                : null,
+      ),
       body: BlocBuilder<ChatBloc, ChatState>(
         bloc: _chatBloc,
         builder: (context, chatState) {
           return BlocBuilder<SearchBloc, SearchState>(
             bloc: _searchBloc,
             builder: (context, searchState) {
-              final filteredSessions = searchState is SearchResults
+              final allSessions = searchState is SearchResults
                   ? searchState.filteredSessions
                   : _chatBloc.getChatSessions();
-              return FadeInDown(
-                child: CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SearchField(
-                        searchController: _viewModel.searchController,
-                        onChanged: _viewModel.handleSearchChange,
-                        onClear: _viewModel.clearSearch,
+
+              final filteredSessions = allSessions.where((session) {
+                final chatMessages = _chatBloc.getMessages(session.chatId);
+                return chatMessages.isNotEmpty;
+              }).toList();
+
+              return CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: SearchField(
+                      searchController: _viewModel.searchController,
+                      onChanged: _viewModel.handleSearchChange,
+                      onClear: _viewModel.clearSearch,
+                    ),
+                  ),
+                  if (filteredSessions.isEmpty)
+                    SliverFillRemaining(
+                      child: const EmptyBodyCard(
+                        title: "No chats found",
+                        image: ImageManager.history,
+                      ).center().withOnlyPadding(bottom: 10.h),
+                    )
+                  else
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final session = filteredSessions[index];
+                          final chatMessages =
+                              _chatBloc.getMessages(session.chatId);
+                          return SlidableChatCard(
+                            index: index,
+                            chatSessions: filteredSessions,
+                            chatBloc: _chatBloc,
+                            chatMessages: chatMessages,
+                          );
+                        },
+                        childCount: filteredSessions.length,
                       ),
                     ),
-                    if (filteredSessions.length <= 1)
-                      SliverFillRemaining(
-                        child: const EmptyBodyCard(
-                          title: "No matching chats found",
-                          image: ImageManager.history,
-                        ).center().withOnlyPadding(bottom: 10.h),
-                      )
-                    else
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final session = filteredSessions[index];
-                            final chatMessages =
-                                _chatBloc.getMessages(session.chatId);
-                            return SlidableChatCard(
-                              index: index,
-                              chatSessions: filteredSessions,
-                              chatBloc: _chatBloc,
-                              chatMessages: chatMessages,
-                            );
-                          },
-                          childCount: filteredSessions.length,
-                        ),
-                      ),
-                  ],
-                ),
+                ],
               );
             },
           );

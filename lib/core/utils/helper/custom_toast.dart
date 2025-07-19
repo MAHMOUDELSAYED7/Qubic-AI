@@ -159,7 +159,7 @@ class _TopSnackBarState extends State<TopSnackBar>
               color: Colors.transparent,
               child: Container(
                 width: containerWidth,
-                color: widget.color.withValues(alpha: 0.95),
+                color: widget.color.withOpacity(0.95),
                 child: Text(
                   widget.message,
                   maxLines: 3,
