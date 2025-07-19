@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/di/locator.dart';
 import '../../../core/themes/colors.dart';
@@ -123,8 +124,31 @@ For questions or concerns about these Terms, contact:
               a: TextStyle(
                 color: ColorManager.grey,
                 decoration: TextDecoration.underline,
+                decorationColor: ColorManager.grey,
               ),
             ),
+            onTapLink: (text, url, title) async {
+              if (url != null) {
+                if (url.startsWith('mailto:')) {
+                  try {
+                    await launchUrl(Uri.parse(url));
+                  } catch (e) {
+                    showCustomToast(context,
+                        color: ColorManager.error,
+                        message: 'Failed to open email app');
+                  }
+                } else if (url.startsWith('https:')) {
+                  try {
+                    await launchUrl(Uri.parse(url),
+                        mode: LaunchMode.externalApplication);
+                  } catch (e) {
+                    showCustomToast(context,
+                        color: ColorManager.error,
+                        message: 'Failed to open link');
+                  }
+                }
+              }
+            },
           ),
         ),
         actions: [
@@ -198,8 +222,31 @@ For questions or concerns about this Privacy Policy, contact:
               a: TextStyle(
                 color: ColorManager.grey,
                 decoration: TextDecoration.underline,
+                decorationColor: ColorManager.grey,
               ),
             ),
+            onTapLink: (text, url, title) async {
+              if (url != null) {
+                if (url.startsWith('mailto:')) {
+                  try {
+                    await launchUrl(Uri.parse(url));
+                  } catch (e) {
+                    showCustomToast(context,
+                        color: ColorManager.error,
+                        message: 'Failed to open email app');
+                  }
+                } else if (url.startsWith('https:')) {
+                  try {
+                    await launchUrl(Uri.parse(url),
+                        mode: LaunchMode.externalApplication);
+                  } catch (e) {
+                    showCustomToast(context,
+                        color: ColorManager.error,
+                        message: 'Failed to open link');
+                  }
+                }
+              }
+            },
           ),
         ),
         actions: [
@@ -245,7 +292,7 @@ Qubic AI is an intelligent chatbot application designed to provide engaging, edu
 At Qubic AI, we are dedicated to maintaining a secure and privacy-focused environment. No personal information is collected, and all data remains on your device, except for text queries sent to Google Generative AI for processing, as outlined in our Privacy Policy.
 
 ## About the Developer
-Qubic AI is crafted with care by Mahmoud El Sayed, an independent developer committed to creating innovative and user-friendly applications, Qubic AI reflects a passion for technology and accessibility.
+Qubic AI is crafted with care by Mahmoud El Sayed, an independent developer committed to creating innovative and user-friendly applications. Qubic AI reflects a passion for technology and accessibility.
 
 ## Contact Us
 For questions, feedback, or support, please reach out:  
@@ -266,18 +313,34 @@ For questions, feedback, or support, please reach out:
               h2: context.textTheme.titleLarge?.copyWith(
                 color: ColorManager.white,
               ),
-              strong: context.textTheme.bodyMedium?.copyWith(
-                color: ColorManager.white,
-                fontWeight: FontWeight.bold,
-              ),
               a: TextStyle(
-                color: ColorManager.purple,
-                decoration: TextDecoration.underline,
-              ),
-              listBullet: context.textTheme.bodyMedium?.copyWith(
                 color: ColorManager.grey,
+                decoration: TextDecoration.underline,
+                decorationColor: ColorManager.grey,
               ),
             ),
+            onTapLink: (text, url, title) async {
+              if (url != null) {
+                if (url.startsWith('mailto:')) {
+                  try {
+                    await launchUrl(Uri.parse(url));
+                  } catch (e) {
+                    showCustomToast(context,
+                        color: ColorManager.error,
+                        message: 'Failed to open email app');
+                  }
+                } else if (url.startsWith('https:')) {
+                  try {
+                    await launchUrl(Uri.parse(url),
+                        mode: LaunchMode.externalApplication);
+                  } catch (e) {
+                    showCustomToast(context,
+                        color: ColorManager.error,
+                        message: 'Failed to open link');
+                  }
+                }
+              }
+            },
           ),
         ),
         actions: [
@@ -391,7 +454,7 @@ For questions, feedback, or support, please reach out:
         }
       },
       child: Padding(
-        padding: EdgeInsets.only(bottom: 12.h),
+        padding: EdgeInsets.only(top: 12.h, bottom: 12.h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
