@@ -74,7 +74,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const SettingsBottomSheet(),
+      builder: (context) => SettingsBottomSheet(
+        chatBloc: _chatBloc,
+      ),
     );
   }
 
@@ -120,9 +122,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
           return BlocBuilder<SearchBloc, SearchState>(
             bloc: _searchBloc,
             builder: (context, searchState) {
-              final filteredSessions = searchState is SearchResults
+              final allSessions = searchState is SearchResults
                   ? searchState.filteredSessions
                   : _chatBloc.getChatSessions();
+
+              final filteredSessions = allSessions.where((session) {
+                final chatMessages = _chatBloc.getMessages(session.chatId);
+                return chatMessages.isNotEmpty;
+              }).toList();
+
               return CustomScrollView(
                 controller: _scrollController,
                 slivers: [
@@ -133,10 +141,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       onClear: _viewModel.clearSearch,
                     ),
                   ),
-                  if (filteredSessions.length <= 1)
+                  if (filteredSessions.isEmpty)
                     SliverFillRemaining(
                       child: const EmptyBodyCard(
-                        title: "No matching chats found",
+                        title: "No chats found",
                         image: ImageManager.history,
                       ).center().withOnlyPadding(bottom: 10.h),
                     )

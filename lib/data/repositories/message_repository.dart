@@ -91,26 +91,7 @@ class MessageRepository {
 
   List<ChatSession> getChatSessions() {
     if (_sessionBox.values.isEmpty) {
-      return [
-        ChatSession(
-          chatId: 1,
-          messages: [
-            Message(
-              chatId: 1,
-              isUser: false,
-              message: "Welcome to Qubic AI!",
-              timestamp: DateTime.now().toString(),
-            ),
-            Message(
-              chatId: 1,
-              isUser: false,
-              message: "Hello there! How can I help you?",
-              timestamp: DateTime.now().toString(),
-            ),
-          ],
-          createdAt: DateTime.now().toString(),
-        ),
-      ];
+      return [];
     }
     return _sessionBox.values.toList();
   }
@@ -130,20 +111,7 @@ class MessageRepository {
 
       final defaultSession = ChatSession(
         chatId: 1,
-        messages: [
-          Message(
-            chatId: 1,
-            isUser: false,
-            message: "Welcome to Qubic AI!",
-            timestamp: DateTime.now().toString(),
-          ),
-          Message(
-            chatId: 1,
-            isUser: false,
-            message: "Hello there! How can I help you?",
-            timestamp: DateTime.now().toString(),
-          ),
-        ],
+        messages: [],
         createdAt: DateTime.now().toString(),
       );
 

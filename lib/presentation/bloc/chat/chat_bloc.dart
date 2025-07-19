@@ -24,6 +24,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<CreateNewChatSessionEvent>(_onCreateNewChatSession);
     on<DeleteChatSessionEvent>(_onDeleteChatSession);
     on<DeleteAllChatsEvent>(_onDeleteAllChats);
+    on<ChatListUpdatedEvent>(_onChatListUpdated);
   }
 
   Future<void> _onCreateNewChatSession(
@@ -169,5 +170,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       log(error.toString());
       emit(ChatFailure("Failed to get a response"));
     }
+  }
+
+  Future<void> _onChatListUpdated(
+      ChatListUpdatedEvent event, Emitter<ChatState> emit) async {
+    emit(ChatListUpdated());
   }
 }
