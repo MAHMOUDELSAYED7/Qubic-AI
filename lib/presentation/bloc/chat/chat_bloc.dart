@@ -44,7 +44,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   int getSessionId() {
-    return _messageRepository.getChatSessions().last.chatId;
+    final sessions = _messageRepository.getChatSessions();
+    if (sessions.isEmpty) {
+      // Create a new chat session if none exists
+      return _messageRepository.createNewChatSessionSync();
+    }
+    return sessions.last.chatId;
   }
 
   List<Message> getMessages(int chatId) {
