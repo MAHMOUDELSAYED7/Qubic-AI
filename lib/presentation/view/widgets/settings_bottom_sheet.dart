@@ -7,6 +7,9 @@ import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/di/locator.dart';
+import '../../../core/service/app_settings.dart';
+import '../../../core/service/notification_manager.dart';
+import '../../../core/service/workmanger.dart';
 import '../../../core/themes/colors.dart';
 import '../../../core/utils/helper/custom_toast.dart';
 import '../../bloc/chat/chat_bloc.dart';
@@ -24,6 +27,8 @@ class SettingsBottomSheet extends StatefulWidget {
 class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
   late DraggableScrollableController _controller;
   double _currentSize = 0.7;
+  late final ChatBloc _chatBloc;
+  bool _notificationsEnabled = true;
 
   @override
   void initState() {
@@ -31,9 +36,105 @@ class _SettingsBottomSheetState extends State<SettingsBottomSheet> {
     super.initState();
     _controller = DraggableScrollableController();
     _controller.addListener(_onSizeChanged);
+    _loadNotificationSettings();
   }
 
-  late final ChatBloc _chatBloc;
+  Future<void> _loadNotificationSettings() async {
+    final enabled = await AppSettingsService.instance.getNotificationsEnabled();
+    setState(() {
+      _notificationsEnabled = enabled;
+    });
+  }
+
+  Future<void> _toggleNotifications(bool enabled) async {
+    if (enabled) {
+      final hasPermission = await NotificationManager.instance.requestPermissionFromSettings();
+      
+      if (hasPermission) {
+        await AppSettingsService.instance.setNotificationsEnabled(true);
+        WorkManagerService.enableNotifications();
+        showCustomToast(
+          context,
+          message: 'Notifications enabled',
+          color: ColorManager.purple,
+        );
+        setState(() {
+          _notificationsEnabled = true;
+        });
+      } else {
+        final isPermanentlyDenied = await NotificationManager.instance.isPermissionPermanentlyDenied();
+        
+        if (isPermanentlyDenied) {
+          _showPermissionBlockedDialog();
+        }
+        
+        setState(() {
+          _notificationsEnabled = false;
+        });
+      }
+    } else {
+      await AppSettingsService.instance.setNotificationsEnabled(false);
+      WorkManagerService.disableNotifications();
+      showCustomToast(
+        context,
+        message: 'Notifications disabled',
+        color: ColorManager.grey,
+      );
+      setState(() {
+        _notificationsEnabled = false;
+      });
+    }
+  }
+
+  void _showPermissionBlockedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: ColorManager.dark,
+          title: Text(
+            'Permission Required',
+            style: context.textTheme.bodyLarge,
+            textAlign: TextAlign.center,
+          ),
+          content: Text(
+            'Notification permission is blocked. Please enable it in your device settings to receive notifications.',
+            style: context.textTheme.bodySmall,
+            textAlign: TextAlign.center,
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            _buildPermissionDialogActions(context),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildPermissionDialogActions(BuildContext context) => Row(
+        children: [
+          SizedBox(width: 5.w),
+          Expanded(
+            child: OutlinedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: BounceIn(
+              child: ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  await NotificationManager.instance.openSystemSettings();
+                },
+                child: const Text('Open'),
+              ),
+            ),
+          ),
+          SizedBox(width: 5.w),
+        ],
+      );
 
   void _onSizeChanged() {
     setState(() {
@@ -705,6 +806,7 @@ For questions, feedback, or support, please reach out:
                       controller: scrollController,
                       padding: EdgeInsets.symmetric(horizontal: 12.w),
                       children: [
+                        _buildNotificationToggle(),
                         _buildSettingsItem(
                           'Terms of Service',
                           'Read our terms and conditions',
@@ -746,6 +848,51 @@ For questions, feedback, or support, please reach out:
           ),
         );
       },
+    );
+  }
+
+  Widget _buildNotificationToggle() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 8.h),
+      decoration: BoxDecoration(
+        color: ColorManager.grey.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: ListTile(
+        leading: Container(
+          padding: EdgeInsets.all(8.w),
+          decoration: BoxDecoration(
+            color: ColorManager.purple.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Icon(
+            Icons.notifications,
+            color: ColorManager.purple,
+            size: 24.w,
+          ),
+        ),
+        title: Text(
+          'Notifications',
+          style: context.textTheme.bodyLarge?.copyWith(
+            color: ColorManager.white,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: Text(
+          'Receive reminders every 8 hours',
+          style: context.textTheme.bodySmall?.copyWith(
+            color: ColorManager.grey,
+          ),
+        ),
+        trailing: Switch(
+          value: _notificationsEnabled,
+          onChanged: _toggleNotifications,
+          activeColor: ColorManager.purple,
+          activeTrackColor: ColorManager.purple.withOpacity(0.3),
+          inactiveThumbColor: ColorManager.grey,
+          inactiveTrackColor: ColorManager.grey.withOpacity(0.3),
+        ),
+      ),
     );
   }
 
