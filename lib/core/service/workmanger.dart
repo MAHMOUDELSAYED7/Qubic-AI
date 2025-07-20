@@ -70,7 +70,7 @@ class WorkManagerService {
     Workmanager().registerPeriodicTask(
       taskUniqueId,
       periodicTaskName,
-      frequency: const Duration(minutes: 15),
+      frequency: const Duration(hours: 8),
       initialDelay: Duration.zero,
       constraints: Constraints(
         networkType: NetworkType.not_required,
