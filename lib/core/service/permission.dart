@@ -1,20 +1,42 @@
+import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionService {
-  // Check if notification permission is granted
   Future<bool> checkNotificationPermission() async {
-    final status = await Permission.notification.status;
-    return status.isGranted;
+    try {
+      final status = await Permission.notification.status;
+      return status.isGranted;
+    } catch (e) {
+      debugPrint('Error checking notification permission: $e');
+      return false;
+    }
   }
 
-  // Request notification permission
   Future<bool> requestNotificationPermission() async {
-    final status = await Permission.notification.request();
-    return status.isGranted;
+    try {
+      final status = await Permission.notification.request();
+      return status.isGranted;
+    } catch (e) {
+      debugPrint('Error requesting notification permission: $e');
+      return false;
+    }
   }
 
-  // Open app settings for manual permission adjustment
-  Future<void> openAppSettings() async {
-    await openAppSettings();
+  Future<bool> isPermissionPermanentlyDenied() async {
+    try {
+      final status = await Permission.notification.status;
+      return status.isPermanentlyDenied;
+    } catch (e) {
+      debugPrint('Error checking permanently denied status: $e');
+      return false;
+    }
+  }
+
+  Future<void> openSystemAppSettings() async {
+    try {
+      await openAppSettings();
+    } catch (e) {
+      debugPrint('Error opening app settings: $e');
+    }
   }
 }

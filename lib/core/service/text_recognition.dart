@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class TextRecognitionService {
-   final TextRecognizer _textRecognizer = TextRecognizer();
+  final TextRecognizer _textRecognizer = TextRecognizer();
 
   Future<String> extractText(File image) async {
     final inputImage = InputImage.fromFile(image);

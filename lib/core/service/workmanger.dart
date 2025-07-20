@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:workmanager/workmanager.dart';
 
+import 'app_settings.dart';
 import 'local_notifications.dart';
+import 'notification_manager.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    final notificationService = NotificationService();
+    final notificationService = NotificationService.instance;
+    final appSettings = AppSettingsService.instance;
+
     try {
-      // Initialize notifications (skip channel creation in background)
-      await notificationService.init(createChannel: false);
+      final notificationsEnabled = await appSettings.getNotificationsEnabled();
+      if (!notificationsEnabled) {
+        return Future.value(true);
+      }
+
+      await notificationService.init(createChannel: true);
+
       await notificationService.showNotification(
-        id: 1,
+        id: DateTime.now().millisecondsSinceEpoch ~/ 1000, //! Unique ID
         title: 'Qubic AI Reminder',
-        body: "You can ask Qubic AI about anything",
+        body: "You can ask Qubic AI about anything! Tap to open.",
+        payload: 'background_reminder',
       );
     } catch (err) {
-      debugPrint("Error showing notification: $err");
+      debugPrint("Error in background task: $err");
     }
     return Future.value(true);
   });
@@ -24,23 +34,63 @@ void callbackDispatcher() {
 
 class WorkManagerService {
   static const String periodicTaskName = "periodicNotificationTask";
+  static const String taskUniqueId = "1";
 
   static void initialize() {
     Workmanager().initialize(
       callbackDispatcher,
       isInDebugMode: false,
     );
+    
+    _initializeWithNotificationCheck();
   }
 
-  static void registerPeriodicNotificationTask() {
-    // // Cancel existing task before registering new one
-    // Workmanager().cancelByUniqueName("1");
+  static Future<void> _initializeWithNotificationCheck() async {
+    try {
+      await NotificationManager.instance.initializeNotificationSettings();
+      
+      final appSettings = AppSettingsService.instance;
+      final notificationsEnabled = await appSettings.getNotificationsEnabled();
+      
+      if (notificationsEnabled) {
+        _registerPeriodicNotificationTask();
+        debugPrint('📅 Periodic notifications registered');
+      } else {
+        cancelPeriodicNotificationTask();
+        debugPrint('🚫 Notifications disabled - no background task');
+      }
+    } catch (e) {
+      debugPrint('Error initializing WorkManager: $e');
+    }
+  }
+
+  static void _registerPeriodicNotificationTask() {
+    Workmanager().cancelByUniqueName(taskUniqueId);
 
     Workmanager().registerPeriodicTask(
-      "1",
+      taskUniqueId,
       periodicTaskName,
       frequency: const Duration(hours: 8),
-      initialDelay: const Duration(seconds: 10),
+      initialDelay: Duration.zero,
+      constraints: Constraints(
+        networkType: NetworkType.not_required,
+        requiresBatteryNotLow: false,
+        requiresCharging: false,
+        requiresDeviceIdle: false,
+        requiresStorageNotLow: false,
+      ),
     );
+  }
+
+  static void cancelPeriodicNotificationTask() {
+    Workmanager().cancelByUniqueName(taskUniqueId);
+  }
+
+  static void enableNotifications() {
+    _registerPeriodicNotificationTask();
+  }
+
+  static void disableNotifications() {
+    cancelPeriodicNotificationTask();
   }
 }
