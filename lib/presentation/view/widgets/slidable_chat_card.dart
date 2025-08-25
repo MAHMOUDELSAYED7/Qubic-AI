@@ -37,7 +37,7 @@ class SlidableChatCard extends StatelessWidget {
             SlidableAction(
               onPressed: (_) {
                 chatSessions.length <= 1
-                    ? _chatBloc.add(CreateNewChatSessionEvent())
+                    ? _chatBloc.add(const CreateNewChatSessionEvent())
                     : null;
                 _chatBloc.add(DeleteChatSessionEvent(session.chatId));
                 chatSessions.removeAt(index);

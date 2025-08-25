@@ -69,16 +69,16 @@ class _AIBubbleState extends State<AIBubble> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
-              topRight: Radius.circular(16),
-              bottomRight: Radius.circular(16),
-              topLeft: Radius.circular(16),
+              topRight: const Radius.circular(16),
+              bottomRight: const Radius.circular(16),
+              topLeft: const Radius.circular(16),
               bottomLeft: widget.isStreaming == true
-                  ? Radius.circular(16)
+                  ? const Radius.circular(16)
                   : Radius.zero),
           color: ColorManager.dark,
           boxShadow: widget.isStreaming == true
               ? [
-                  BoxShadow(
+                  const BoxShadow(
                     color: ColorManager.purple,
                     blurRadius: 30,
                     offset: Offset(0, 0),

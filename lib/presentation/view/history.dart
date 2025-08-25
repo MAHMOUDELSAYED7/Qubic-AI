@@ -109,7 +109,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     key: const ValueKey('settings_button'),
                     onPressed: _openSettings,
                     backgroundColor: ColorManager.purple,
-                    child: Icon(
+                    child: const Icon(
                       Icons.settings,
                       color: ColorManager.white,
                     ),

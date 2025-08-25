@@ -202,7 +202,7 @@ class _BuildInputFieldState extends State<BuildInputField> {
                 )
               : null,
           icon: widget.isLoading
-              ? LoadingIndicator(
+              ? const LoadingIndicator(
                   indicatorType: Indicator.ballBeat,
                 ).withSize(width: 25, height: 25)
               : Icon(

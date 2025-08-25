@@ -44,7 +44,7 @@ class SearchField extends StatelessWidget {
                     context.textTheme.bodyMedium?.copyWith(fontSize: 15.spMin),
                 textDirection:
                     RegExpManager.getTextDirection(searchController.text),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                   hintText: 'Search chat history',

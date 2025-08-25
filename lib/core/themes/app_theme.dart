@@ -19,7 +19,7 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
-                side: BorderSide(width: 2)),
+                side: const BorderSide(width: 2)),
             foregroundColor: ColorManager.white),
       ),
       iconTheme: const IconThemeData(color: ColorManager.white, size: 25),

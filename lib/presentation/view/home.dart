@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    _chcecInternetConnection();
+    _checkInternetConnection();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       setState(() {
@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
-  void _chcecInternetConnection() async {
+  void _checkInternetConnection() async {
     if (!await NetworkManager.isConnected()) {
       showCustomToast(
         context,

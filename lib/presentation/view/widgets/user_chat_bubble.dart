@@ -124,7 +124,7 @@ class _UserBubbleState extends State<UserBubble> {
                     )
                     .withOnlyPadding(bottom: 8),
               ] else ...[
-                Icon(
+                const Icon(
                   Icons.broken_image_rounded,
                   size: 35,
                 ).withSquareSize(200).center()
