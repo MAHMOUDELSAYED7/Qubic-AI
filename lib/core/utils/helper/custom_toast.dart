@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:qubic_ai/core/utils/extensions/extensions.dart';
 
@@ -153,22 +154,25 @@ class _TopSnackBarState extends State<TopSnackBar>
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          SlideTransition(
-            position: _animation,
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                width: containerWidth,
-                color: widget.color.withOpacity(0.95),
-                child: Text(
-                  widget.message,
-                  maxLines: 3,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: textStyle,
-                ).center().withSymmetricPadding(vertical: 16, horizontal: 32),
-              ).circular(25),
-            ).withAllPadding(8.0),
+          ZoomIn(
+            duration: const Duration(milliseconds: 600),
+            child: SlideTransition(
+              position: _animation,
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  width: containerWidth,
+                  color: widget.color.withOpacity(0.95),
+                  child: Text(
+                    widget.message,
+                    maxLines: 3,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: textStyle,
+                  ).center().withSymmetricPadding(vertical: 16, horizontal: 32),
+                ).circular(25),
+              ).withAllPadding(8.0),
+            ),
           ),
         ],
       ),
