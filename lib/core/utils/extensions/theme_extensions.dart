@@ -10,9 +10,9 @@ extension ThemeExtensions on BuildContext {
 
   TextTheme get textTheme => Theme.of(this).textTheme;
 
-  AppBarTheme get appBarTheme => Theme.of(this).appBarTheme;
+  AppBarThemeData get appBarTheme => Theme.of(this).appBarTheme;
 
-  InputDecorationTheme get inputDecorationTheme =>
+  InputDecorationThemeData get inputDecorationTheme =>
       Theme.of(this).inputDecorationTheme;
 
   CheckboxThemeData get checkboxTheme => Theme.of(this).checkboxTheme;
@@ -86,7 +86,7 @@ extension ThemeExtensions on BuildContext {
   TextSelectionThemeData get textSelectionTheme =>
       Theme.of(this).textSelectionTheme;
 
-  BottomAppBarTheme get bottomAppBarTheme => Theme.of(this).bottomAppBarTheme;
+  BottomAppBarThemeData get bottomAppBarTheme => Theme.of(this).bottomAppBarTheme;
 
   MaterialTapTargetSize get materialTapTargetSize =>
       Theme.of(this).materialTapTargetSize;
